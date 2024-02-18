@@ -5,3 +5,5 @@ db:
   port: 5432
   user: "postgres"
   pass: "1337"
+  name: "psbd"
+  sslmode: "disable"

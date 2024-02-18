@@ -17,6 +17,8 @@ type DatabaseConfig struct {
 	Port     int    `yaml:"port"`
 	Username string `yaml:"user"`
 	Password string `yaml:"pass"`
+	DBName   string `yaml:"name"`
+	SSLMode  string `yaml:"sslmode"`
 }
 
 func NewConfig(configPath string) *Config {

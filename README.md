@@ -14,6 +14,8 @@ API config location is `config/.yaml`
   - `port` - port for postgreSQL db
   - `user` - postgreSQL user
   - `pass` - postgreSQL user's password
+  - `name` - name of database
+  - `sslmode` - SSL mode
   
 **Example:**
 ```yaml
@@ -25,6 +27,8 @@ db:
   port: 5432
   user: "postgres"
   pass: "1337"
+  name: "psbd"
+  sslmode: "disable"
 ```
 
 ## Dependencies
