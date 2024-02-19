@@ -23,24 +23,7 @@ func main() {
 		return
 	}
 
-	// city := &models.City{
-	// 	Name: "Макеевка",
-	// }
-	// if err := repo.City().Create(city); err != nil {
-	// 	logger.Error("CANNOT INSERT TEST RECORD", slog.String("err", err.Error()))
-	// 	return
-	// }
-	// logger.Debug("TEST RECORD INSERTED")
-
-	cities, err := repo.City().Get()
-	if err != nil {
-		logger.Error("CANNOT SELECT RECORDS", slog.String("err", err.Error()))
-		return
-	}
-
-	for _, city := range cities {
-		logger.Debug("city", slog.String("name", city.Name))
-	}
+	_ = repo
 }
 
 func setupLogger(env string) *slog.Logger {
