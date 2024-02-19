@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"os"
 	"sladkoezhevo-api/internal/config"
-	"sladkoezhevo-api/internal/storage/models"
 	"sladkoezhevo-api/internal/storage/pg"
 )
 
@@ -24,14 +23,7 @@ func main() {
 		return
 	}
 
-	city := &models.City{
-		Name: "Макеевка",
-	}
-	if err := repo.City().Create(city); err != nil {
-		logger.Error("CANNOT INSERT TEST RECORD", slog.String("err", err.Error()))
-		return
-	}
-	logger.Debug("TEST RECORD INSERTED")
+	_ = repo
 }
 
 func setupLogger(env string) *slog.Logger {
