@@ -28,6 +28,8 @@ func New(services *services.Services, logger *slog.Logger) *Server {
 func (s *Server) Configure() {
 	s.app.Get("/ping", s.PingHandler())
 
+	s.app.Get("/cities", s.CityGet())
+
 	s.logger.Info("Routes configured")
 }
 
@@ -35,15 +37,17 @@ func (s *Server) Start(port string) error {
 
 	s.logger.Info("Starting server", slog.String("port", port))
 
-	if err := s.app.Listen(fmt.Sprintf(":%s", port)); err != nil {
-		return err
-	}
-
-	return nil
+	return s.app.Listen(fmt.Sprintf(":%s", port))
 }
 
 func (s *Server) PingHandler() HandlerFunc {
 	return func(c *fiber.Ctx) error {
-		return c.SendString("pong")
+		return s.respond(c, "pong")
 	}
+}
+
+func (s *Server) respond(c *fiber.Ctx, data interface{}) error {
+	return c.Status(200).JSON(&fiber.Map{
+		"data": data,
+	})
 }

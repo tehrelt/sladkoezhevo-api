@@ -1,10 +1,6 @@
 package storage
 
-import "sladkoezhevo-api/internal/storage/models"
-
-type Repository struct {
-	City CityRepository
-}
+import "sladkoezhevo-api/internal/models"
 
 type CityRepository interface {
 	Create(*models.City) error

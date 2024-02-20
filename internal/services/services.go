@@ -6,13 +6,14 @@ import (
 )
 
 type Services struct {
-	storage storage.Storage
-	logger  *slog.Logger
+	logger *slog.Logger
+
+	Cities *CityService
 }
 
-func NewServices(storage storage.Storage, logger *slog.Logger) *Services {
+func NewServices(repo storage.Repository, logger *slog.Logger) *Services {
 	return &Services{
-		storage: storage,
-		logger:  logger,
+		logger: logger,
+		Cities: NewCityService(repo.City()),
 	}
 }

@@ -1,5 +1,5 @@
 package storage
 
-type Storage interface {
+type Repository interface {
 	City() CityRepository
 }

@@ -16,7 +16,7 @@ const (
 
 type Storage struct {
 	db   *sqlx.DB
-	city *CityRepository
+	city *cityRepository
 }
 
 func New(config *config.DatabaseConfig) (*Storage, error) {
@@ -33,6 +33,6 @@ func (s *Storage) City() storage.CityRepository {
 	if s.city != nil {
 		return s.city
 	}
-	s.city = &CityRepository{s}
+	s.city = &cityRepository{s}
 	return s.city
 }

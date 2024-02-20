@@ -1,21 +1,21 @@
 package pg
 
 import (
-	"sladkoezhevo-api/internal/storage/models"
+	"sladkoezhevo-api/internal/models"
 )
 
-type CityRepository struct {
+type cityRepository struct {
 	*Storage
 }
 
-func (r *CityRepository) Create(city *models.City) error {
+func (r *cityRepository) Create(city *models.City) error {
 	return r.db.QueryRow(
 		"INSERT INTO city (name) VALUES ($1) RETURNING id",
 		city.Name,
 	).Scan(&city.Id)
 }
 
-func (r *CityRepository) Get() ([]*models.City, error) {
+func (r *cityRepository) Get() ([]*models.City, error) {
 
 	var cities []*models.City
 
@@ -37,7 +37,7 @@ func (r *CityRepository) Get() ([]*models.City, error) {
 	return cities, nil
 }
 
-func (r *CityRepository) GetOne(id int) (*models.City, error) {
+func (r *cityRepository) GetOne(id int) (*models.City, error) {
 
 	row := r.db.QueryRow("SELECT * FROM city WHERE id=$1;", id)
 
@@ -51,12 +51,12 @@ func (r *CityRepository) GetOne(id int) (*models.City, error) {
 	return &city, nil
 }
 
-func (r *CityRepository) Update(city *models.City) error {
+func (r *cityRepository) Update(city *models.City) error {
 	_, err := r.db.Query("UPDATE city SET name=$1 WHERE id=$2;", city.Name, city.Id)
 	return err
 }
 
-func (r *CityRepository) Delete(id int) error {
+func (r *cityRepository) Delete(id int) error {
 	_, err := r.db.Query("REMOVE FROM city WHERE id=$1;", id)
 	return err
 }
