@@ -3,50 +3,60 @@ package handlers
 import (
 	"fmt"
 	"log/slog"
+	_ "sladkoezhevo-api/docs"
 	"sladkoezhevo-api/internal/services"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
 )
 
 type HandlerFunc func(c *fiber.Ctx) error
 
-type Server struct {
-	app      *fiber.App
+type Router struct {
 	services *services.Services
 	logger   *slog.Logger
+	App      *fiber.App
 }
 
-func New(services *services.Services, logger *slog.Logger) *Server {
+func New(services *services.Services, logger *slog.Logger) *Router {
 
-	return &Server{
-		app:      fiber.New(),
+	r := &Router{
 		services: services,
 		logger:   logger,
+		App:      fiber.New(),
 	}
+
+	r.Configure()
+
+	return r
 }
 
-func (s *Server) Configure() {
-	s.app.Get("/ping", s.PingHandler())
+func (s *Router) Configure() {
 
-	s.app.Get("/cities", s.CityGet())
+	s.App.Use(logger.New())
+
+	s.App.Get("/docs/*", swagger.HandlerDefault)
+
+	route := s.App.Group("api/v1")
+
+	route.Get("/ping", s.PingHandler())
+	route.Get("/cities", s.HandlerGetCities)
 
 	s.logger.Info("Routes configured")
 }
 
-func (s *Server) Start(port string) error {
-
-	s.logger.Info("Starting server", slog.String("port", port))
-
-	return s.app.Listen(fmt.Sprintf(":%s", port))
+func (s *Router) Start(port string) error {
+	return s.App.Listen(fmt.Sprintf(":%s", port))
 }
 
-func (s *Server) PingHandler() HandlerFunc {
+func (s *Router) PingHandler() HandlerFunc {
 	return func(c *fiber.Ctx) error {
 		return s.respond(c, "pong")
 	}
 }
 
-func (s *Server) respond(c *fiber.Ctx, data interface{}) error {
+func (s *Router) respond(c *fiber.Ctx, data interface{}) error {
 	return c.Status(200).JSON(&fiber.Map{
 		"data": data,
 	})

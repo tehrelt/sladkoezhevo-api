@@ -1,0 +1,30 @@
+definitions:
+  models.City:
+    description: City information with city id and city name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/cities:
+    get:
+      description: Get all cities
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.City'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get all cities
+swagger: "2.0"

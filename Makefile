@@ -11,6 +11,10 @@ prerequisites:
 
 run:
 	make build
+	make swagger
 	$(BUILD_DIR)\api.exe
+
+swagger:
+	swag init -g internal/handlers/server.go -o docs
 
 .DEFAULT_GOAL := build

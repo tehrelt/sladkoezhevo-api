@@ -15,6 +15,15 @@ const (
 	envProd = "prod"
 )
 
+// @title SladkoEzhevoAPI
+// @version 0.1
+// @description Swagger doc for SladkoEzhevoAPI
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.email haxrelt@gmail.com
+// @license.name MIT
+// @host localhost:7000
+// @BasePath /api/v1
 func main() {
 	config := config.NewConfig("config/.yaml")
 	logger := setupLogger(config.Env)
@@ -29,7 +38,6 @@ func main() {
 	services := services.NewServices(repo, logger)
 	server := handlers.New(services, logger)
 
-	server.Configure()
 	log.Fatal(server.Start(config.Port))
 }
 
