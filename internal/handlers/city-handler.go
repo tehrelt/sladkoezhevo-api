@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"sladkoezhevo-api/internal/models"
+	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +13,7 @@ import (
 //		@Tags 			Cities
 //		@Produce		json
 //		@Success		200	{array}	models.City
-//		@Failure		400 {object} models.ErrorResponse
+//		@Failure		400
 //		@Failure		500
 //		@Router			/api/v1/cities [get]
 func (s *Router) HandlerGetCities(c *fiber.Ctx) error {
@@ -33,7 +33,7 @@ func (s *Router) HandlerGetCities(c *fiber.Ctx) error {
 //	@Tags 			Cities
 //	@Produce		json
 //	@Success		200	{array}	models.City
-//	@Failure		400 {object} models.ErrorResponse
+//	@Failure		400
 //	@Failure		500
 //	@Param 			id path int true "City ID"
 //	@Router			/api/v1/cities/{id} [get]
@@ -43,14 +43,12 @@ func (s *Router) HandlerGetCity(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		s.respond(c, &models.ErrorResponse{
-			Message: "INVALID ID",
-		})
+		return s.bad(err.Error())
 	}
 
 	city, err := s.services.Cities.GetOne(id)
 	if err != nil {
-		return err
+		return s.notfound(fmt.Sprintf("city with id=%d not found", id))
 	}
 
 	return s.respond(c, city)

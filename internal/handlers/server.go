@@ -62,3 +62,15 @@ func (s *Router) respond(c *fiber.Ctx, data interface{}) error {
 		"data": data,
 	})
 }
+
+func (s *Router) bad(message string) error {
+	return fiber.NewError(500, message)
+}
+
+func (s *Router) notfound(message string) error {
+	return fiber.NewError(404, message)
+}
+
+func (s *Router) error(code int, message string) error {
+	return fiber.NewError(code, message)
+}

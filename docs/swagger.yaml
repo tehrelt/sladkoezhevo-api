@@ -7,12 +7,6 @@ definitions:
       name:
         type: string
     type: object
-  models.ErrorResponse:
-    description: Information about error
-    properties:
-      message:
-        type: string
-    type: object
 info:
   contact: {}
 paths:
@@ -30,8 +24,6 @@ paths:
             type: array
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
       summary: Get all cities
@@ -57,8 +49,6 @@ paths:
             type: array
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
       summary: Get city by ID
