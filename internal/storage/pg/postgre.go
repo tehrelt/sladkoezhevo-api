@@ -36,4 +36,3 @@ func (s *Storage) City() storage.CityRepository {
 	s.city = &CityRepository{s}
 	return s.city
 }
-

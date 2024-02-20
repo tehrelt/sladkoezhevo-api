@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Port            int    `yaml:"port"`
+	Port            string `yaml:"port"`
 	Env             string `yaml:"env"`
 	*DatabaseConfig `yaml:"db"`
 }

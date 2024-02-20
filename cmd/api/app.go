@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	"log/slog"
 	"os"
 	"sladkoezhevo-api/internal/config"
+	"sladkoezhevo-api/internal/handlers"
+	"sladkoezhevo-api/internal/services"
 	"sladkoezhevo-api/internal/storage/pg"
 )
 
@@ -23,7 +26,11 @@ func main() {
 		return
 	}
 
-	_ = repo
+	services := services.NewServices(repo, logger)
+	server := handlers.New(services, logger)
+
+	server.Configure()
+	log.Fatal(server.Start(config.Port))
 }
 
 func setupLogger(env string) *slog.Logger {

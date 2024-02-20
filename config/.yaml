@@ -1,4 +1,4 @@
-port: 8080
+port: 7000
 env: "dev"
 db:
   host: "127.0.0.1"
