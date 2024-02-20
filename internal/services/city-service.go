@@ -25,3 +25,7 @@ func NewCityService(repo CityRepository) *CityService {
 func (s *CityService) Get() ([]*models.City, error) {
 	return s.r.Get()
 }
+
+func (s *CityService) GetOne(id int) (*models.City, error) {
+	return s.r.GetOne(id)
+}

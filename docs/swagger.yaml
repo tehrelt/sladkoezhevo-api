@@ -7,6 +7,12 @@ definitions:
       name:
         type: string
     type: object
+  models.ErrorResponse:
+    description: Information about error
+    properties:
+      message:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -24,7 +30,38 @@ paths:
             type: array
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
       summary: Get all cities
+      tags:
+      - Cities
+  /api/v1/cities/{id}:
+    get:
+      description: Get city by ID
+      parameters:
+      - description: City ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.City'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+      summary: Get city by ID
+      tags:
+      - Cities
 swagger: "2.0"

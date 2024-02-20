@@ -10,11 +10,11 @@ prerequisites:
 	if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
 
 run:
-	make build
 	make swagger
+	make build
 	$(BUILD_DIR)\api.exe
 
 swagger:
-	swag init -g internal/handlers/server.go -o docs
+	swag init -g internal\handlers\server.go -o docs
 
 .DEFAULT_GOAL := build

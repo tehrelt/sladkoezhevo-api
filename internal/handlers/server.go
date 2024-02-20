@@ -42,6 +42,7 @@ func (s *Router) Configure() {
 
 	route.Get("/ping", s.PingHandler())
 	route.Get("/cities", s.HandlerGetCities)
+	route.Get("/cities/:id", s.HandlerGetCity)
 
 	s.logger.Info("Routes configured")
 }
