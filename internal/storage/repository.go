@@ -9,3 +9,11 @@ type CityRepository interface {
 	Update(*models.City) error
 	Delete(id int) error
 }
+
+type PackagingRepository interface {
+	Create(*models.Packaging) error
+	Get() ([]*models.Packaging, error)
+	GetOne(int) (*models.Packaging, error)
+	Update(*models.Packaging) error
+	Delete(id int) error
+}

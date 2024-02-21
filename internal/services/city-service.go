@@ -13,19 +13,19 @@ type CityRepository interface {
 }
 
 type CityService struct {
-	r CityRepository
+	repository CityRepository
 }
 
 func NewCityService(repo CityRepository) *CityService {
 	return &CityService{
-		r: repo,
+		repository: repo,
 	}
 }
 
 func (s *CityService) Get() ([]*models.City, error) {
-	return s.r.Get()
+	return s.repository.Get()
 }
 
 func (s *CityService) GetOne(id int) (*models.City, error) {
-	return s.r.GetOne(id)
+	return s.repository.GetOne(id)
 }

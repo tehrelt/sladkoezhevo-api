@@ -39,10 +39,12 @@ func (s *Router) Configure() {
 	s.App.Get("/docs/*", swagger.HandlerDefault)
 
 	route := s.App.Group("api/v1")
-
 	route.Get("/ping", s.PingHandler())
 	route.Get("/cities", s.HandlerGetCities)
 	route.Get("/cities/:id", s.HandlerGetCity)
+
+	route.Get("/packaging/", s.HandlerPackagingTypes)
+	route.Get("/packaging/:id", s.HandlerPackagingType)
 
 	s.logger.Info("Routes configured")
 }
@@ -63,14 +65,15 @@ func (s *Router) respond(c *fiber.Ctx, data interface{}) error {
 	})
 }
 
+func (s *Router) notimplemented(fn string) error {
+	return fiber.NewError(500, fmt.Sprintf("%s: not implemented", fn))
+}
 func (s *Router) bad(message string) error {
 	return fiber.NewError(500, message)
 }
-
 func (s *Router) notfound(message string) error {
 	return fiber.NewError(404, message)
 }
-
 func (s *Router) error(code int, message string) error {
 	return fiber.NewError(code, message)
 }
