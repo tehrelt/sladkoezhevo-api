@@ -46,7 +46,7 @@ func (s *Router) HandlerPackagingType(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		return s.bad(err.Error())
+		return s.internal(err.Error())
 	}
 
 	city, err := s.services.Cities.GetOne(id)

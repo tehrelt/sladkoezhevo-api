@@ -1,8 +1,11 @@
 package pg
 
 import (
+	"database/sql"
+	"errors"
 	"github.com/lib/pq"
 	"sladkoezhevo-api/internal/models"
+	"sladkoezhevo-api/internal/storage"
 )
 
 type cityRepository struct {
@@ -16,10 +19,11 @@ func (r *cityRepository) Create(city *models.City) error {
 	).Scan(&city.Id)
 
 	if err != nil {
-		pqError, ok := err.(*pq.Error)
+		var pqError *pq.Error
+		ok := errors.As(err, &pqError)
 		if ok {
 			if pqError.Code == "23505" {
-				return ErrRecordAlreadyExists
+				return storage.ErrRecordAlreadyExists
 			}
 		}
 
@@ -56,9 +60,11 @@ func (r *cityRepository) GetOne(id int) (*models.City, error) {
 	row := r.db.QueryRow("SELECT * FROM city WHERE id=$1;", id)
 
 	var city models.City
-
 	err := row.Scan(&city.Id, &city.Name)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, storage.ErrRecordNotFound
+		}
 		return nil, err
 	}
 
@@ -67,7 +73,15 @@ func (r *cityRepository) GetOne(id int) (*models.City, error) {
 
 func (r *cityRepository) Update(city *models.City) error {
 	_, err := r.db.Query("UPDATE city SET name=$1 WHERE id=$2;", city.Name, city.Id)
-	return err
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return storage.ErrRecordNotFound
+		}
+		return err
+	}
+
+	return nil
 }
 
 func (r *cityRepository) Delete(id int) error {

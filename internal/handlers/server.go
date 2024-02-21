@@ -24,6 +24,8 @@ type Router struct {
 func New(services *services.Services, logger *slog.Logger) *Router {
 
 	app := fiber.New(fiber.Config{
+		AppName:       "sladkoezhevo-api",
+		CaseSensitive: true,
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			code := fiber.StatusInternalServerError
 
@@ -63,6 +65,7 @@ func (s *Router) Configure() {
 	route.Get("/cities", s.HandlerGetCities)
 	route.Get("/cities/:id", s.HandlerGetCity)
 	route.Post("/cities", s.HandlerCreateCity)
+	route.Put("/cities", s.HandlerUpdateCity)
 
 	route.Get("/packaging/", s.HandlerPackagingTypes)
 	route.Get("/packaging/:id", s.HandlerPackagingType)
@@ -85,19 +88,15 @@ func (s *Router) respond(c *fiber.Ctx, data interface{}) error {
 		"data": data,
 	})
 }
-
-func (s *Router) notimplemented(fn string) error {
-	return fiber.NewError(500, fmt.Sprintf("%s: not implemented", fn))
-}
 func (s *Router) bad(message string) error {
-	return fiber.NewError(500, message)
+	return fiber.NewError(400, message)
 }
 func (s *Router) notfound(message string) error {
 	return fiber.NewError(404, message)
 }
-
-//func (s *Router) error(c *fiber.Ctx, code int, message string) error {
-//	return c.Status(code).JSON(models.ErrorResponse{
-//		Message: message,
-//	})
-//}
+func (s *Router) internal(message string) error {
+	return fiber.NewError(500, message)
+}
+func (s *Router) notimplemented(fn string) error {
+	return fiber.NewError(500, fmt.Sprintf("%s: not implemented", fn))
+}
