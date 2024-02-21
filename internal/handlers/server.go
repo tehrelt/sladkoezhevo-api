@@ -82,21 +82,3 @@ func (s *Router) PingHandler() HandlerFunc {
 		return s.respond(c, "pong")
 	}
 }
-
-func (s *Router) respond(c *fiber.Ctx, data interface{}) error {
-	return c.Status(200).JSON(&fiber.Map{
-		"data": data,
-	})
-}
-func (s *Router) bad(message string) error {
-	return fiber.NewError(400, message)
-}
-func (s *Router) notfound(message string) error {
-	return fiber.NewError(404, message)
-}
-func (s *Router) internal(message string) error {
-	return fiber.NewError(500, message)
-}
-func (s *Router) notimplemented(fn string) error {
-	return fiber.NewError(500, fmt.Sprintf("%s: not implemented", fn))
-}

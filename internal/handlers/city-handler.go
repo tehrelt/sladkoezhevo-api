@@ -25,11 +25,11 @@ func (s *Router) HandlerCreateCity(c *fiber.Ctx) error {
 	var city models.City
 
 	if err := c.BodyParser(&city); err != nil {
-		return s.internal(err.Error())
+		return s.internal(fmt.Sprintf("%s [@HandlerCreateCity]", err.Error()))
 	}
 
 	if err := s.services.Cities.Create(&city); err != nil {
-		return s.internal(err.Error())
+		return s.internal(fmt.Sprintf("%s [@HandlerCreateCity]", err.Error()))
 	}
 
 	return c.SendStatus(fiber.StatusCreated)
@@ -52,7 +52,7 @@ func (s *Router) HandlerGetCities(c *fiber.Ctx) error {
 		return s.notfound("no cities")
 	}
 
-	return s.respond(c, cities)
+	return s.respond(c, fiber.StatusOK, cities)
 }
 
 // GetCityById
@@ -87,7 +87,7 @@ func (s *Router) HandlerGetCity(c *fiber.Ctx) error {
 		return s.internal(fmt.Sprintf("%s [@HandlerGetCity]", err.Error()))
 	}
 
-	return s.respond(c, city)
+	return s.respond(c, fiber.StatusOK, city)
 }
 
 // UpdateCity
@@ -106,14 +106,14 @@ func (s *Router) HandlerUpdateCity(c *fiber.Ctx) error {
 	var city models.City
 
 	if err := c.BodyParser(&city); err != nil {
-		return err
+		return s.internal(fmt.Sprintf("%s [@HandlerUpdateCity]", err.Error()))
 	}
 
 	if err := s.services.Cities.Update(&city); err != nil {
 		if errors.Is(err, storage.ErrRecordNotFound) {
 			return s.notfound(fmt.Sprintf("city with id=%d not found", city.Id))
 		}
-		return s.internal(err.Error())
+		return s.internal(fmt.Sprintf("%s [@HandlerUpdateCity]", err.Error()))
 	}
 
 	return c.SendStatus(fiber.StatusOK)
