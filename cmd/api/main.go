@@ -29,13 +29,8 @@ func main() {
 	logger := setupLogger(config.Env)
 	logger.Debug("Logger initialized")
 
-	repo, err := pg.New(config.DatabaseConfig)
-	if err != nil {
-		logger.Error("CANNOT INIT REPOSITORY", slog.String("err", err.Error()))
-		return
-	}
-
-	services := services.NewServices(repo, logger)
+	repository := pg.New(config.DatabaseConfig)
+	services := services.NewServices(repository, logger)
 	server := handlers.New(services, logger)
 
 	log.Fatal(server.Start(config.Port))

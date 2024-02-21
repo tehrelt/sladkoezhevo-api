@@ -8,12 +8,12 @@ import (
 type Services struct {
 	logger *slog.Logger
 
-	Cities *CityService
+	Cities *cityService
 }
 
 func NewServices(repo storage.Repository, logger *slog.Logger) *Services {
 	return &Services{
 		logger: logger,
-		Cities: NewCityService(repo.City()),
+		Cities: newCityService(repo.City()),
 	}
 }

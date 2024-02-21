@@ -1,6 +1,7 @@
 package pg
 
 import (
+	"github.com/lib/pq"
 	"sladkoezhevo-api/internal/models"
 )
 
@@ -9,10 +10,23 @@ type cityRepository struct {
 }
 
 func (r *cityRepository) Create(city *models.City) error {
-	return r.db.QueryRow(
+	err := r.db.QueryRow(
 		"INSERT INTO city (name) VALUES ($1) RETURNING id",
 		city.Name,
 	).Scan(&city.Id)
+
+	if err != nil {
+		pqError, ok := err.(*pq.Error)
+		if ok {
+			if pqError.Code == "23505" {
+				return ErrRecordAlreadyExists
+			}
+		}
+
+		return err
+	}
+
+	return nil
 }
 
 func (r *cityRepository) Get() ([]*models.City, error) {

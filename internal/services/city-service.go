@@ -2,30 +2,31 @@ package services
 
 import (
 	"sladkoezhevo-api/internal/models"
+	"sladkoezhevo-api/internal/storage"
 )
 
-type CityRepository interface {
-	Create(*models.City) error
-	Get() ([]*models.City, error)
-	GetOne(int) (*models.City, error)
-	Update(*models.City) error
-	Delete(id int) error
+type cityService struct {
+	repository storage.CityRepository
 }
 
-type CityService struct {
-	repository CityRepository
-}
-
-func NewCityService(repo CityRepository) *CityService {
-	return &CityService{
+func newCityService(repo storage.CityRepository) *cityService {
+	return &cityService{
 		repository: repo,
 	}
 }
 
-func (s *CityService) Get() ([]*models.City, error) {
+func (s *cityService) Create(city *models.City) error {
+	return s.repository.Create(city)
+}
+func (s *cityService) Get() ([]*models.City, error) {
 	return s.repository.Get()
 }
-
-func (s *CityService) GetOne(id int) (*models.City, error) {
+func (s *cityService) GetOne(id int) (*models.City, error) {
 	return s.repository.GetOne(id)
+}
+func (s *cityService) Update(city *models.City) error {
+	return s.repository.Update(city)
+}
+func (s *cityService) Delete(id int) error {
+	return s.repository.Delete(id)
 }

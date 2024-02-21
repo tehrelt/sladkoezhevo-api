@@ -1,13 +1,15 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log/slog"
 	_ "sladkoezhevo-api/docs"
+	"sladkoezhevo-api/internal/models"
 	"sladkoezhevo-api/internal/services"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 )
 
@@ -21,10 +23,27 @@ type Router struct {
 
 func New(services *services.Services, logger *slog.Logger) *Router {
 
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			code := fiber.StatusInternalServerError
+
+			var e *fiber.Error
+			if errors.As(err, &e) {
+				code = e.Code
+			}
+
+			err = ctx.Status(code).JSON(models.ErrorResponse{
+				Message: e.Message,
+			})
+
+			return nil
+		},
+	})
+
 	r := &Router{
 		services: services,
 		logger:   logger,
-		App:      fiber.New(),
+		App:      app,
 	}
 
 	r.Configure()
@@ -40,8 +59,10 @@ func (s *Router) Configure() {
 
 	route := s.App.Group("api/v1")
 	route.Get("/ping", s.PingHandler())
+
 	route.Get("/cities", s.HandlerGetCities)
 	route.Get("/cities/:id", s.HandlerGetCity)
+	route.Post("/cities", s.HandlerCreateCity)
 
 	route.Get("/packaging/", s.HandlerPackagingTypes)
 	route.Get("/packaging/:id", s.HandlerPackagingType)
@@ -74,6 +95,9 @@ func (s *Router) bad(message string) error {
 func (s *Router) notfound(message string) error {
 	return fiber.NewError(404, message)
 }
-func (s *Router) error(code int, message string) error {
-	return fiber.NewError(code, message)
-}
+
+//func (s *Router) error(c *fiber.Ctx, code int, message string) error {
+//	return c.Status(code).JSON(models.ErrorResponse{
+//		Message: message,
+//	})
+//}

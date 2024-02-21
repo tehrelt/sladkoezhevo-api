@@ -73,3 +73,19 @@ type CatalogueRepository interface {
 	Update(*models.ProductEntry) error
 	Delete(id int) error
 }
+
+type ShopRepository interface {
+	Create(*models.Shop) error
+	Get() ([]*models.Shop, error)
+	GetOne(int) (*models.Shop, error)
+	Update(*models.Shop) error
+	Delete(id int) error
+}
+
+type ShipmentsRepository interface {
+	Create(*models.Shipment) error
+	Get() ([]*models.Shipment, error)
+	GetOne(int) (*models.Shipment, error)
+	Update(*models.Shipment) error
+	Delete(id int) error
+}
