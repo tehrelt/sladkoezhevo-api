@@ -24,10 +24,12 @@ const (
 )
 
 type Storage struct {
-	db        *sqlx.DB
-	city      *cityRepository
-	packaging *packagingRepository
-	units     *unitsRepository
+	db            *sqlx.DB
+	city          *cityRepository
+	packaging     *packagingRepository
+	units         *unitsRepository
+	property      *propertyRepository
+	confectionary *confectionaryRepository
 }
 
 func (s *Storage) District() storage.DistrictRepository {
@@ -52,13 +54,19 @@ func (s *Storage) Units() storage.UnitsRepository {
 }
 
 func (s *Storage) PropertyType() storage.PropertyTypeRepository {
-	//TODO implement me
-	panic("implement me")
+	if s.property != nil {
+		return s.property
+	}
+	s.property = &propertyRepository{s}
+	return s.property
 }
 
 func (s *Storage) ConfectionaryType() storage.ConfectionaryTypeRepository {
-	//TODO implement me
-	panic("implement me")
+	if s.confectionary != nil {
+		return s.confectionary
+	}
+	s.confectionary = &confectionaryRepository{s}
+	return s.confectionary
 }
 
 func (s *Storage) Factory() storage.FactoryRepository {
