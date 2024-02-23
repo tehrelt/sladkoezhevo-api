@@ -3,6 +3,7 @@ package pg
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/lib/pq"
 	"sladkoezhevo-api/internal/models"
 	"sladkoezhevo-api/internal/storage"
@@ -14,7 +15,7 @@ type cityRepository struct {
 
 func (r *cityRepository) Create(city *models.City) error {
 	err := r.db.QueryRow(
-		"INSERT INTO city (name) VALUES ($1) RETURNING id",
+		fmt.Sprintf("INSERT INTO %s (name) VALUES ($1) RETURNING id", cityTable),
 		city.Name,
 	).Scan(&city.Id)
 
@@ -37,7 +38,7 @@ func (r *cityRepository) Get() ([]*models.City, error) {
 
 	var cities []*models.City
 
-	rows, err := r.db.Query("SELECT * FROM city;")
+	rows, err := r.db.Query(fmt.Sprintf("SELECT * FROM %s;", cityTable))
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +58,7 @@ func (r *cityRepository) Get() ([]*models.City, error) {
 
 func (r *cityRepository) GetOne(id int) (*models.City, error) {
 
-	row := r.db.QueryRow("SELECT * FROM city WHERE id=$1;", id)
+	row := r.db.QueryRow(fmt.Sprintf("SELECT * FROM %s WHERE id=$1;", cityTable), id)
 
 	var city models.City
 	err := row.Scan(&city.Id, &city.Name)
@@ -72,7 +73,7 @@ func (r *cityRepository) GetOne(id int) (*models.City, error) {
 }
 
 func (r *cityRepository) Update(city *models.City) error {
-	_, err := r.db.Query("UPDATE city SET name=$1 WHERE id=$2;", city.Name, city.Id)
+	_, err := r.db.Query(fmt.Sprintf("UPDATE  SET name=$1 WHERE id=$2;", cityTable), city.Name, city.Id)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -85,6 +86,6 @@ func (r *cityRepository) Update(city *models.City) error {
 }
 
 func (r *cityRepository) Delete(id int) error {
-	_, err := r.db.Query("REMOVE FROM city WHERE id=$1;", id)
+	_, err := r.db.Query(fmt.Sprintf("REMOVE FROM %s WHERE id=$1;", cityTable), id)
 	return err
 }
