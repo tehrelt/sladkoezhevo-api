@@ -11,12 +11,23 @@ import (
 )
 
 const (
-	CityTable = "city"
+	cityTable              = "city"
+	packagingTable         = "packaging"
+	unitsTable             = "units"
+	propertyTypeTable      = "property_type"
+	confectionaryTypeTable = "confectionary_type"
+	factoryTable           = "factory"
+	productTable           = "product"
+	catalogueTable         = "catalogue"
+	districtTable          = "district"
+	shipmentsTable         = "shipments"
 )
 
 type Storage struct {
-	db   *sqlx.DB
-	city *cityRepository
+	db        *sqlx.DB
+	city      *cityRepository
+	packaging *packagingRepository
+	units     *unitsRepository
 }
 
 func (s *Storage) District() storage.DistrictRepository {
@@ -25,13 +36,19 @@ func (s *Storage) District() storage.DistrictRepository {
 }
 
 func (s *Storage) Packaging() storage.PackagingRepository {
-	//TODO implement me
-	panic("implement me")
+	if s.packaging != nil {
+		return s.packaging
+	}
+	s.packaging = &packagingRepository{s}
+	return s.packaging
 }
 
 func (s *Storage) Units() storage.UnitsRepository {
-	//TODO implement me
-	panic("implement me")
+	if s.units != nil {
+		return s.units
+	}
+	s.units = &unitsRepository{s}
+	return s.units
 }
 
 func (s *Storage) PropertyType() storage.PropertyTypeRepository {
